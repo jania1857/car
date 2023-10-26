@@ -1,0 +1,80 @@
+package pl.jwz.models;
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.util.Objects;
+import javax.swing.ImageIcon;
+
+public class Car {
+    private double x;
+    private double y;
+    private double rotation;
+    private int speed;
+    private double rotationSpeed;
+    private final Image image;
+
+    public Car(int x, int y) {
+        this.x = x;
+        this.y = y;
+        this.rotation = 0;
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(classLoader.getResource("assets/cars/car1.png")));
+        image = imageIcon.getImage();
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public void setRotationSpeed(double rotationSpeed) {
+        this.rotationSpeed = rotationSpeed;
+    }
+
+    public void draw(Graphics2D graphics) {
+        AffineTransform transform = new AffineTransform();
+        transform.rotate(rotation, x + (double) image.getWidth(null) / 2, y + (double) image.getHeight(null) / 2);
+
+        graphics.setTransform(transform);
+
+        graphics.drawImage(image, (int) x, (int) y, null);
+
+        graphics.setTransform(new AffineTransform());
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+    public void setY(double y) {
+        this.y = y;
+    }
+    public void setRotation(double rotation) {
+        this.rotation = rotation;
+    }
+    public double getX() {
+        return x;
+    }
+    public double getY() {
+        return y;
+    }
+    public void move() {
+        double vrotation = rotation + 3 * (Math.PI / 2);
+        double deltaX = Math.cos(vrotation) * speed;
+        double deltaY = Math.sin(vrotation) * speed;
+
+        x += deltaX;
+        y += deltaY;
+    }
+
+    public void rotateLeft() {
+        rotation -= rotationSpeed;
+        if (rotation <= 0)
+            rotation += 2 * Math.PI;
+    }
+
+    public void rotateRight() {
+        rotation += rotationSpeed;
+        if (rotation >= 2 * Math.PI)
+            rotation -= 2 * Math.PI;
+    }
+}
