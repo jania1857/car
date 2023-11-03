@@ -1,9 +1,10 @@
 package pl.jwz.models;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.Objects;
-import javax.swing.ImageIcon;
 
 public class Car {
     private double x;
@@ -19,7 +20,7 @@ public class Car {
         this.rotation = 0;
 
         ClassLoader classLoader = getClass().getClassLoader();
-        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(classLoader.getResource("assets/cars/car1.png")));
+        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(classLoader.getResource("assets/cars/atrapa.png")));
         image = imageIcon.getImage();
     }
 
@@ -45,22 +46,27 @@ public class Car {
     public void setX(double x) {
         this.x = x;
     }
+
     public void setY(double y) {
         this.y = y;
     }
+
     public void setRotation(double rotation) {
         this.rotation = rotation;
     }
+
     public double getX() {
         return x;
     }
+
     public double getY() {
         return y;
     }
+
     public void move() {
-        double vrotation = rotation + 3 * (Math.PI / 2);
-        double deltaX = Math.cos(vrotation) * speed;
-        double deltaY = Math.sin(vrotation) * speed;
+        double vRotation = rotation + 3 * (Math.PI / 2);
+        double deltaX = Math.cos(vRotation) * speed;
+        double deltaY = Math.sin(vRotation) * speed;
 
         x += deltaX;
         y += deltaY;
@@ -76,5 +82,18 @@ public class Car {
         rotation += rotationSpeed;
         if (rotation >= 2 * Math.PI)
             rotation -= 2 * Math.PI;
+    }
+
+    public BufferedImage getImage() {
+        if (image instanceof BufferedImage) {
+            return (BufferedImage) image;
+        }
+
+        BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = bufferedImage.createGraphics();
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+
+        return bufferedImage;
     }
 }
