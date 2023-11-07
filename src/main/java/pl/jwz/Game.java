@@ -1,6 +1,7 @@
 package pl.jwz;
 
 import pl.jwz.models.Car;
+import pl.jwz.models.Sensors;
 import pl.jwz.models.Track;
 
 import javax.swing.*;
@@ -17,6 +18,7 @@ public class Game extends JPanel implements ActionListener {
     private final Car car;
     private final Track track;
     private final Set<Integer> keysPressed = new HashSet<>();
+    private Sensors sensors = new Sensors();
 
     private class TAdapter extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
@@ -40,6 +42,7 @@ public class Game extends JPanel implements ActionListener {
 
         Timer timer = new Timer(1, this);
         timer.start();
+        car.getCarWidth();
     }
 
     public void paintComponent(Graphics graphics) {

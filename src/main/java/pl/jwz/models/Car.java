@@ -12,7 +12,9 @@ public class Car {
     private double rotation;
     private int speed;
     private double rotationSpeed;
-    private final Image image;
+    private Image image;
+    double carWidth;
+    double carHeight;
 
     public Car(int x, int y) {
         this.x = x;
@@ -22,6 +24,11 @@ public class Car {
         ClassLoader classLoader = getClass().getClassLoader();
         ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(classLoader.getResource("assets/cars/atrapa.png")));
         image = imageIcon.getImage();
+        this.carWidth = image.getWidth(null);
+        this.carHeight = image.getHeight(null);
+    }
+
+    public Car() {
     }
 
     public void setSpeed(int speed) {
@@ -61,6 +68,14 @@ public class Car {
 
     public double getY() {
         return y;
+    }
+
+    public double getCarWidth() {
+        return carWidth;
+    }
+
+    public double getCarHeight() {
+        return carHeight;
     }
 
     public void move() {
