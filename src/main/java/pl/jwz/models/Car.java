@@ -7,16 +7,18 @@ import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 public class Car {
+
+    private static Car instance;
     private double x;
     private double y;
     private double rotation;
     private int speed;
     private double rotationSpeed;
     private Image image;
-    double carWidth;
-    double carHeight;
+    private int carWidth;
+    private int carHeight;
 
-    public Car(int x, int y) {
+    private Car() {
         this.x = x;
         this.y = y;
         this.rotation = 0;
@@ -28,7 +30,11 @@ public class Car {
         this.carHeight = image.getHeight(null);
     }
 
-    public Car() {
+    public static synchronized Car getInstance(){
+        if (instance == null){
+            instance = new Car();
+        }
+        return instance;
     }
 
     public void setSpeed(int speed) {
@@ -48,6 +54,8 @@ public class Car {
         graphics.drawImage(image, (int) x, (int) y, null);
 
         graphics.setTransform(new AffineTransform());
+        Sensors sensors = new Sensors();
+        sensors.createSensors(graphics);
     }
 
     public void setX(double x) {
@@ -62,6 +70,10 @@ public class Car {
         this.rotation = rotation;
     }
 
+    public double getRotation() {
+        return rotation;
+    }
+
     public double getX() {
         return x;
     }
@@ -70,11 +82,11 @@ public class Car {
         return y;
     }
 
-    public double getCarWidth() {
+    public int getCarWidth() {
         return carWidth;
     }
 
-    public double getCarHeight() {
+    public int getCarHeight() {
         return carHeight;
     }
 

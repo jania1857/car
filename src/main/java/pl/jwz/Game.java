@@ -1,7 +1,6 @@
 package pl.jwz;
 
 import pl.jwz.models.Car;
-import pl.jwz.models.Sensors;
 import pl.jwz.models.Track;
 
 import javax.swing.*;
@@ -15,10 +14,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Game extends JPanel implements ActionListener {
+
     private final Car car;
     private final Track track;
     private final Set<Integer> keysPressed = new HashSet<>();
-    private Sensors sensors = new Sensors();
 
     private class TAdapter extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
@@ -31,18 +30,18 @@ public class Game extends JPanel implements ActionListener {
     }
 
     public Game() {
-        car = new Car(100, 300);
+        car = Car.getInstance();
+        car.setX(150);
+        car.setY(300);
         track = new Track(0, 0, 1500, 800);
 
         car.setSpeed(5);
         car.setRotationSpeed(0.04);
-
         setFocusable(true);
         addKeyListener(new TAdapter());
 
         Timer timer = new Timer(1, this);
         timer.start();
-        car.getCarWidth();
     }
 
     public void paintComponent(Graphics graphics) {
@@ -51,7 +50,6 @@ public class Game extends JPanel implements ActionListener {
 
         track.draw(g2d);
         car.draw(g2d);
-
     }
 
     public void checkCollision() {

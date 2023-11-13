@@ -1,21 +1,23 @@
 package pl.jwz.models;
 
+import java.awt.*;
+
 public class Sensors {
-    private double leftSensorLength;
-    private double centerSensorLength;
+
+    private int center;
+    private int leftSensorLength;
+    private int centerSensorLength;
     private double rightSensorLength;
     private boolean sensorsVisibility;
-    private final Car car = new Car();
+    private final Car car = Car.getInstance();
     private double carWidth = car.getCarWidth();
     private double carHeight = car.getCarHeight();
 
     public Sensors() {
-        this.leftSensorLength = 45d;
-        this.centerSensorLength = 45d;
-        this.rightSensorLength = 45d;
+        this.leftSensorLength = 20;
+        this.centerSensorLength = 45;
+        this.rightSensorLength = 20d;
         this.sensorsVisibility = true;
-
-        createSensors();
     }
 
     public double getLeftSensorLength() {
@@ -30,11 +32,11 @@ public class Sensors {
         return rightSensorLength;
     }
 
-    public void setLeftSensorLength(double leftSensorLength) {
+    public void setLeftSensorLength(int leftSensorLength) {
         this.leftSensorLength = leftSensorLength;
     }
 
-    public void setCenterSensorLength(double centerSensorLength) {
+    public void setCenterSensorLength(int centerSensorLength) {
         this.centerSensorLength = centerSensorLength;
     }
 
@@ -50,13 +52,21 @@ public class Sensors {
         this.sensorsVisibility = sensorsVisibility;
     }
 
-    public void createSensors(){
-
+    public void createSensors(Graphics graphics) {
+        createCenterSensor(graphics);
     }
 
-    private void createLeftSensor(){
+    private void createCenterSensor(Graphics g) {
+        int x1 = (int) car.getX();
+        int y1 = (int) car.getY();
 
+        int aa = car.getCarWidth()/2;
+        //int b1 = x1 + car.getCarWidth();
+
+        center = x1 + aa;
+
+
+        g.setColor(Color.red);
+        g.drawLine(center, y1, center, y1 - leftSensorLength);
     }
-
-
 }
