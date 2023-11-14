@@ -4,43 +4,46 @@ import java.awt.*;
 
 public class Sensors {
 
-    private int center;
-    private int leftSensorLength;
     private int centerSensorLength;
-    private double rightSensorLength;
+    private int leftSensorLength;
+    private int rightSensorLength;
     private boolean sensorsVisibility;
     private final Car car = Car.getInstance();
     private double carWidth = car.getCarWidth();
     private double carHeight = car.getCarHeight();
+    private int carRotation = (int) car.getRotation();
+
+    private int x1 = (int) car.getX();
+    private int y1 = (int) car.getY();
 
     public Sensors() {
-        this.leftSensorLength = 20;
         this.centerSensorLength = 45;
-        this.rightSensorLength = 20d;
+        this.leftSensorLength = 45;
+        this.rightSensorLength = 45;
         this.sensorsVisibility = true;
     }
 
-    public double getLeftSensorLength() {
-        return leftSensorLength;
-    }
-
-    public double getCenterSensorLength() {
+    public int getCenterSensorLength() {
         return centerSensorLength;
-    }
-
-    public double getRightSensorLength() {
-        return rightSensorLength;
-    }
-
-    public void setLeftSensorLength(int leftSensorLength) {
-        this.leftSensorLength = leftSensorLength;
     }
 
     public void setCenterSensorLength(int centerSensorLength) {
         this.centerSensorLength = centerSensorLength;
     }
 
-    public void setRightSensorLength(double rightSensorLength) {
+    public int getLeftSensorLength() {
+        return leftSensorLength;
+    }
+
+    public void setLeftSensorLength(int leftSensorLength) {
+        this.leftSensorLength = leftSensorLength;
+    }
+
+    public int getRightSensorLength() {
+        return rightSensorLength;
+    }
+
+    public void setRightSensorLength(int rightSensorLength) {
         this.rightSensorLength = rightSensorLength;
     }
 
@@ -54,19 +57,38 @@ public class Sensors {
 
     public void createSensors(Graphics graphics) {
         createCenterSensor(graphics);
+        createLeftSensor(graphics);
+        createRightSensor(graphics);
     }
 
     private void createCenterSensor(Graphics g) {
-        int x1 = (int) car.getX();
-        int y1 = (int) car.getY();
 
-        int aa = car.getCarWidth()/2;
-        //int b1 = x1 + car.getCarWidth();
+        if (carRotation == 0) {
+            carRotation = 1;
+        }
 
-        center = x1 + aa;
-
+        int centerCar = car.getCarWidth() / 2;
+        int centerXCar = x1 + centerCar;
 
         g.setColor(Color.red);
-        g.drawLine(center, y1, center, y1 - leftSensorLength);
+        g.drawLine(centerXCar, y1, centerXCar, y1 - centerSensorLength);
+    }
+
+    private void createLeftSensor(Graphics g) {
+        int x2 = (int) (x1 + leftSensorLength * Math.cos(180));
+        int y2 = (int) (y1 + leftSensorLength * Math.sin(180));
+
+        g.setColor(Color.red);
+        g.drawLine(x1, y1 - 1, x2, y2);
+    }
+
+    private void createRightSensor(Graphics g) {
+        int rightX = x1 + car.getCarWidth();
+
+        int x2 = (int) (rightX + rightSensorLength * Math.cos(-45));
+        int y2 = (int) (y1 + rightSensorLength * Math.sin(-45));
+
+        g.setColor(Color.red);
+        g.drawLine(rightX, y1 - 1, x2, y2);
     }
 }
