@@ -11,7 +11,7 @@ public class Track {
     private final int width;
     private final int height;
     private BufferedImage trackImage;
-    private String trackImagePath = "assets/tracks/track3.png";
+    private String trackImagePath = "assets/tracks/track5.png";
 
     public Track(int x, int y, int width, int height) {
         this.x = x;

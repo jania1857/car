@@ -81,7 +81,6 @@ public class Game extends JPanel implements ActionListener {
             if (keysPressed.contains(KeyEvent.VK_D))
                 car.rotateRight();
         }
-
         checkCollision();
         repaint();
     }

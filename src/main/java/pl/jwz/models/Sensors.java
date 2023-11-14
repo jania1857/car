@@ -1,6 +1,7 @@
 package pl.jwz.models;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 public class Sensors {
 
@@ -11,7 +12,7 @@ public class Sensors {
     private final Car car = Car.getInstance();
     private double carWidth = car.getCarWidth();
     private double carHeight = car.getCarHeight();
-    private int carRotation = (int) car.getRotation();
+    private double carRotation = car.getRotation();
 
     private int x1 = (int) car.getX();
     private int y1 = (int) car.getY();
@@ -55,34 +56,37 @@ public class Sensors {
         this.sensorsVisibility = sensorsVisibility;
     }
 
-    public void createSensors(Graphics graphics) {
+    public void createSensors(Graphics2D graphics) {
         createCenterSensor(graphics);
         createLeftSensor(graphics);
-        createRightSensor(graphics);
+       // createRightSensor(graphics);
     }
 
-    private void createCenterSensor(Graphics g) {
+    private void createCenterSensor(Graphics2D g) {
 
-        if (carRotation == 0) {
-            carRotation = 1;
-        }
+        int centerXCar = (int) (car.getX() + (carWidth/2));
 
-        int centerCar = car.getCarWidth() / 2;
-        int centerXCar = x1 + centerCar;
+        AffineTransform transform = new AffineTransform();
+        transform.rotate(carRotation, centerXCar, y1);
 
         g.setColor(Color.red);
-        g.drawLine(centerXCar, y1, centerXCar, y1 - centerSensorLength);
+        g.setTransform(transform);
+        g.drawLine(centerXCar, y1 - 1, centerXCar, y1 - centerSensorLength);
     }
 
-    private void createLeftSensor(Graphics g) {
+    private void createLeftSensor(Graphics2D g) {
+        AffineTransform transform = new AffineTransform();
+        transform.rotate(carRotation, x1, y1);
+
         int x2 = (int) (x1 + leftSensorLength * Math.cos(180));
         int y2 = (int) (y1 + leftSensorLength * Math.sin(180));
 
+        g.setTransform(transform);
         g.setColor(Color.red);
         g.drawLine(x1, y1 - 1, x2, y2);
     }
 
-    private void createRightSensor(Graphics g) {
+    private void createRightSensor(Graphics2D g) {
         int rightX = x1 + car.getCarWidth();
 
         int x2 = (int) (rightX + rightSensorLength * Math.cos(-45));
