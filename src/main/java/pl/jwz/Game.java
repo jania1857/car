@@ -59,17 +59,20 @@ public class Game extends JPanel implements ActionListener {
         int carX = (int) car.getX();
         int carY = (int) car.getY();
 
-        for (int x = 0; x < carImage.getWidth(); x++) {
-            for (int y = 0; y < carImage.getHeight(); y++) {
-                int carPixel = carImage.getRGB(x, y);
-                int trackPixel = trackImage.getRGB(carX + x, carY + y);
+        try {
+            for (int x = 0; x < carImage.getWidth(); x++) {
+                for (int y = 0; y < carImage.getHeight(); y++) {
+                    int carPixel = carImage.getRGB(x, y);
+                    int trackPixel = trackImage.getRGB(carX + x, carY + y);
 
-                if (carPixel == Color.BLACK.getRGB() && trackPixel == Color.BLACK.getRGB()) {
-                    car.setX(100);
-                    car.setY(300);
-                    car.setRotation(0);
+                    if (carPixel == Color.BLACK.getRGB() && trackPixel == Color.BLACK.getRGB()) {
+                        resetCarPosition();
+                    }
                 }
             }
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
+            resetCarPosition();
         }
     }
 
@@ -83,5 +86,11 @@ public class Game extends JPanel implements ActionListener {
         }
         checkCollision();
         repaint();
+    }
+
+    private void resetCarPosition() {
+        car.setX(100);
+        car.setY(300);
+        car.setRotation(0);
     }
 }
