@@ -9,11 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Game extends JPanel implements ActionListener {
-
 
     private final Car car;
     private final Track track;
@@ -23,18 +23,20 @@ public class Game extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
             keysPressed.add(e.getKeyCode());
         }
+
         public void keyReleased(KeyEvent e) {
             keysPressed.remove(e.getKeyCode());
         }
     }
 
     public Game() {
-        car = new Car(100, 300);
+        car = Car.getInstance();
+        car.setX(150);
+        car.setY(300);
         track = new Track(0, 0, 1500, 800);
 
         car.setSpeed(5);
         car.setRotationSpeed(0.04);
-
         setFocusable(true);
         addKeyListener(new TAdapter());
 
@@ -48,7 +50,27 @@ public class Game extends JPanel implements ActionListener {
 
         track.draw(g2d);
         car.draw(g2d);
+    }
 
+    public void checkCollision() {
+        BufferedImage carImage = car.getImage();
+        BufferedImage trackImage = track.getTrackImage();
+
+        int carX = (int) car.getX();
+        int carY = (int) car.getY();
+
+        for (int x = 0; x < carImage.getWidth(); x++) {
+            for (int y = 0; y < carImage.getHeight(); y++) {
+                int carPixel = carImage.getRGB(x, y);
+                int trackPixel = trackImage.getRGB(carX + x, carY + y);
+
+                if (carPixel == Color.BLACK.getRGB() && trackPixel == Color.BLACK.getRGB()) {
+                    car.setX(100);
+                    car.setY(300);
+                    car.setRotation(0);
+                }
+            }
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -59,7 +81,7 @@ public class Game extends JPanel implements ActionListener {
             if (keysPressed.contains(KeyEvent.VK_D))
                 car.rotateRight();
         }
-
+        checkCollision();
         repaint();
     }
 }
