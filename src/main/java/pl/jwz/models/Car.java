@@ -14,13 +14,12 @@ public class Car {
     private double rotation;
     private int speed;
     private double rotationSpeed;
-    private Image image;
-    private int carWidth;
-    private int carHeight;
+    private final Image image;
+    private final int carWidth;
+    private final int carHeight;
 
     private Car() {
-        this.x = x;
-        this.y = y;
+
         this.rotation = 0;
 
         ClassLoader classLoader = getClass().getClassLoader();
@@ -30,8 +29,8 @@ public class Car {
         this.carHeight = image.getHeight(null);
     }
 
-    public static synchronized Car getInstance(){
-        if (instance == null){
+    public static synchronized Car getInstance() {
+        if (instance == null) {
             instance = new Car();
         }
         return instance;

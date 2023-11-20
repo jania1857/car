@@ -10,12 +10,13 @@ public class Sensors {
     private int rightSensorLength;
     private boolean sensorsVisibility;
     private final Car car = Car.getInstance();
-    private double carWidth = car.getCarWidth();
-    private double carHeight = car.getCarHeight();
-    private double carRotation = car.getRotation();
-
-    private int x1 = (int) car.getX();
-    private int y1 = (int) car.getY();
+    private final double carWidth = car.getCarWidth();
+    private final double carHeight = car.getCarHeight();
+    private final double carRotation = car.getRotation();
+    private final int x1 = (int) ((int) car.getX() + (carWidth / 2));
+    private final int y1 = (int) ((int) car.getY() + (carHeight / 2));
+    private final int halfHeightOfCar = (int) carHeight / 2;
+    private final int halfWidthOfCar = (int) carWidth / 2;
 
     public Sensors() {
         this.centerSensorLength = 45;
@@ -23,6 +24,7 @@ public class Sensors {
         this.rightSensorLength = 45;
         this.sensorsVisibility = true;
     }
+
 
     public int getCenterSensorLength() {
         return centerSensorLength;
@@ -59,40 +61,53 @@ public class Sensors {
     public void createSensors(Graphics2D graphics) {
         createCenterSensor(graphics);
         createLeftSensor(graphics);
-       // createRightSensor(graphics);
+        createRightSensor(graphics);
     }
 
     private void createCenterSensor(Graphics2D g) {
-
-        int centerXCar = (int) (car.getX() + (carWidth/2));
-
         AffineTransform transform = new AffineTransform();
-        transform.rotate(carRotation, centerXCar, y1);
+        transform.rotate(carRotation, x1, y1);
 
-        g.setColor(Color.red);
+        int x2 = (int) (x1 + leftSensorLength * Math.cos(Math.PI * 1.5));
+        int y2 = (int) (y1 + leftSensorLength * Math.sin(Math.PI * 1.5));
+
+
         g.setTransform(transform);
-        g.drawLine(centerXCar, y1 - 1, centerXCar, y1 - centerSensorLength);
+        useColor(g);
+        g.drawLine(x1, y1 - halfHeightOfCar, x2, y2);
     }
 
     private void createLeftSensor(Graphics2D g) {
         AffineTransform transform = new AffineTransform();
         transform.rotate(carRotation, x1, y1);
 
-        int x2 = (int) (x1 + leftSensorLength * Math.cos(180));
-        int y2 = (int) (y1 + leftSensorLength * Math.sin(180));
+        int x2 = (int) (x1 + leftSensorLength * Math.cos(Math.PI * 1.25));
+        int y2 = (int) (y1 + leftSensorLength * Math.sin(Math.PI * 1.25));
+
 
         g.setTransform(transform);
-        g.setColor(Color.red);
-        g.drawLine(x1, y1 - 1, x2, y2);
+        useColor(g);
+        g.drawLine(x1 - halfWidthOfCar, y1 - halfHeightOfCar, x2, y2);
     }
 
     private void createRightSensor(Graphics2D g) {
-        int rightX = x1 + car.getCarWidth();
+         AffineTransform transform = new AffineTransform();
 
-        int x2 = (int) (rightX + rightSensorLength * Math.cos(-45));
-        int y2 = (int) (y1 + rightSensorLength * Math.sin(-45));
+        transform.rotate(carRotation, x1, y1);
+        int x2 = (int) (x1 + leftSensorLength * Math.cos(Math.PI * 1.75));
+        int y2 = (int) (y1 + leftSensorLength * Math.sin(Math.PI * 1.75));
 
-        g.setColor(Color.red);
-        g.drawLine(rightX, y1 - 1, x2, y2);
+
+        g.setTransform(transform);
+        useColor(g);
+        g.drawLine(x1 + halfWidthOfCar, y1 - halfHeightOfCar, x2, y2);
+    }
+
+    private void useColor(Graphics2D g) {
+        if (sensorsVisibility) {
+            g.setColor(Color.red);
+        } else {
+            g.setColor(Color.white);
+        }
     }
 }
