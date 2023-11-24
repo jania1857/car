@@ -1,24 +1,37 @@
 package pl.jwz.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
+@Getter
+@Setter
 public class Track {
     private final int x;
     private final int y;
     private final int width;
     private final int height;
     private BufferedImage trackImage;
-    private String trackImagePath = "assets/tracks/track5.png";
+    private static Track instance;
+    private final String trackImagePath = "assets/tracks/track1.png";
 
-    public Track(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+    private Track() {
+        this.x = 0;
+        this.y = 0;
+        this.width = 1500;
+        this.height = 800;
         this.trackImage = loadTrackImage();
+    }
+
+    public static synchronized Track getInstance() {
+        if (instance == null) {
+            instance = new Track();
+        }
+        return instance;
     }
 
     public void draw(Graphics2D graphics) {

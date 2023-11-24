@@ -1,11 +1,16 @@
 package pl.jwz.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
+@Getter
+@Setter
 public class Car {
 
     private static Car instance;
@@ -19,8 +24,6 @@ public class Car {
     private int carHeight;
 
     private Car() {
-        this.x = x;
-        this.y = y;
         this.rotation = 0;
 
         ClassLoader classLoader = getClass().getClassLoader();
@@ -30,8 +33,8 @@ public class Car {
         this.carHeight = image.getHeight(null);
     }
 
-    public static synchronized Car getInstance(){
-        if (instance == null){
+    public static synchronized Car getInstance() {
+        if (instance == null) {
             instance = new Car();
         }
         return instance;
@@ -54,40 +57,8 @@ public class Car {
         graphics.drawImage(image, (int) x, (int) y, null);
 
         graphics.setTransform(new AffineTransform());
-        Sensors sensors = new Sensors();
+        Sensors sensors = new Sensors(this);
         sensors.createSensors(graphics);
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public void setRotation(double rotation) {
-        this.rotation = rotation;
-    }
-
-    public double getRotation() {
-        return rotation;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public int getCarWidth() {
-        return carWidth;
-    }
-
-    public int getCarHeight() {
-        return carHeight;
     }
 
     public void move() {

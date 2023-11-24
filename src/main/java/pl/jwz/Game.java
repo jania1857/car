@@ -1,5 +1,7 @@
 package pl.jwz;
 
+import lombok.Getter;
+import lombok.Setter;
 import pl.jwz.models.Car;
 import pl.jwz.models.Track;
 
@@ -13,6 +15,8 @@ import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
 public class Game extends JPanel implements ActionListener {
 
     private final Car car;
@@ -33,7 +37,7 @@ public class Game extends JPanel implements ActionListener {
         car = Car.getInstance();
         car.setX(150);
         car.setY(300);
-        track = new Track(0, 0, 1500, 800);
+        track = Track.getInstance();
 
         car.setSpeed(5);
         car.setRotationSpeed(0.04);

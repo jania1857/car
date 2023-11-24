@@ -1,98 +1,89 @@
 package pl.jwz.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
+@Getter
+@Setter
 public class Sensors {
 
     private int centerSensorLength;
     private int leftSensorLength;
     private int rightSensorLength;
     private boolean sensorsVisibility;
-    private final Car car = Car.getInstance();
-    private double carWidth = car.getCarWidth();
-    private double carHeight = car.getCarHeight();
-    private double carRotation = car.getRotation();
+    private final Track track = Track.getInstance();
+    private BufferedImage trackImage = track.getTrackImage();
+    private final Car car;
+    private final int carWidth;
+    private final int carHeight;
+    private final double carRotation;
+    private final int middleOfCarX;
+    private final int middleOfCarY;
 
-    private int x1 = (int) car.getX();
-    private int y1 = (int) car.getY();
-
-    public Sensors() {
-        this.centerSensorLength = 45;
-        this.leftSensorLength = 45;
-        this.rightSensorLength = 45;
+    public Sensors(Car car) {
+        this.car = car;
+        this.carWidth = car.getCarWidth();
+        this.carHeight = car.getCarHeight();
+        this.carRotation = car.getRotation();
+        this.middleOfCarX = (int) (car.getX() + carWidth / 2);
+        this.middleOfCarY = (int) (car.getY() + carHeight / 2);
+        this.centerSensorLength = 60;
+        this.leftSensorLength = 60;
+        this.rightSensorLength = 60;
         this.sensorsVisibility = true;
-    }
-
-    public int getCenterSensorLength() {
-        return centerSensorLength;
-    }
-
-    public void setCenterSensorLength(int centerSensorLength) {
-        this.centerSensorLength = centerSensorLength;
-    }
-
-    public int getLeftSensorLength() {
-        return leftSensorLength;
-    }
-
-    public void setLeftSensorLength(int leftSensorLength) {
-        this.leftSensorLength = leftSensorLength;
-    }
-
-    public int getRightSensorLength() {
-        return rightSensorLength;
-    }
-
-    public void setRightSensorLength(int rightSensorLength) {
-        this.rightSensorLength = rightSensorLength;
-    }
-
-    public boolean isSensorsVisibility() {
-        return sensorsVisibility;
-    }
-
-    public void setSensorsVisibility(boolean sensorsVisibility) {
-        this.sensorsVisibility = sensorsVisibility;
     }
 
     public void createSensors(Graphics2D graphics) {
         createCenterSensor(graphics);
         createLeftSensor(graphics);
-       // createRightSensor(graphics);
+        createRightSensor(graphics);
     }
 
     private void createCenterSensor(Graphics2D g) {
-
-        int centerXCar = (int) (car.getX() + (carWidth/2));
-
-        AffineTransform transform = new AffineTransform();
-        transform.rotate(carRotation, centerXCar, y1);
-
-        g.setColor(Color.red);
-        g.setTransform(transform);
-        g.drawLine(centerXCar, y1 - 1, centerXCar, y1 - centerSensorLength);
+        rotateSensors(g);
+        setVisible(g);
+        g.drawLine(middleOfCarX, middleOfCarY - carHeight / 2, middleOfCarX, middleOfCarY - centerSensorLength);
     }
 
     private void createLeftSensor(Graphics2D g) {
-        AffineTransform transform = new AffineTransform();
-        transform.rotate(carRotation, x1, y1);
+        int x2 = (int) (middleOfCarX + leftSensorLength * Math.cos(180));
+        int y2 = (int) (middleOfCarY + leftSensorLength * Math.sin(180));
+        setVisible(g);
+        g.drawLine(middleOfCarX - carWidth / 2, middleOfCarY - carHeight / 2, x2, y2);
 
-        int x2 = (int) (x1 + leftSensorLength * Math.cos(180));
-        int y2 = (int) (y1 + leftSensorLength * Math.sin(180));
+        if (checkSensorCollision(x2, y2)) {
 
-        g.setTransform(transform);
-        g.setColor(Color.red);
-        g.drawLine(x1, y1 - 1, x2, y2);
+        }
     }
 
     private void createRightSensor(Graphics2D g) {
-        int rightX = x1 + car.getCarWidth();
-
-        int x2 = (int) (rightX + rightSensorLength * Math.cos(-45));
-        int y2 = (int) (y1 + rightSensorLength * Math.sin(-45));
-
-        g.setColor(Color.red);
-        g.drawLine(rightX, y1 - 1, x2, y2);
+        int x2 = (int) (middleOfCarX + rightSensorLength * Math.cos(-45));
+        int y2 = (int) (middleOfCarY + rightSensorLength * Math.sin(-45));
+        setVisible(g);
+        g.drawLine(middleOfCarX + carWidth / 2, middleOfCarY - carHeight / 2, x2, y2);
     }
+
+    private void rotateSensors(Graphics2D g) {
+        AffineTransform transform = new AffineTransform();
+        transform.rotate(carRotation, middleOfCarX, middleOfCarY);
+        g.setTransform(transform);
+    }
+
+    private void setVisible(Graphics2D g) {
+        if (sensorsVisibility) {
+            g.setColor(Color.red);
+        } else {
+            g.setColor(Color.WHITE);
+        }
+    }
+
+    private boolean checkSensorCollision(int x, int y) {
+        int color = trackImage.getRGB(x, y);
+        return color == Color.BLACK.getRGB();
+    }
+
 }
