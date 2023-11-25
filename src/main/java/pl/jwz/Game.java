@@ -3,6 +3,7 @@ package pl.jwz;
 import lombok.Getter;
 import lombok.Setter;
 import pl.jwz.models.Car;
+import pl.jwz.models.Sensors;
 import pl.jwz.models.Track;
 
 import javax.swing.*;
@@ -19,6 +20,7 @@ import java.util.Set;
 @Setter
 public class Game extends JPanel implements ActionListener {
 
+    private Sensors sensors;
     private final Car car;
     private final Track track;
     private final Set<Integer> keysPressed = new HashSet<>();
@@ -34,13 +36,14 @@ public class Game extends JPanel implements ActionListener {
     }
 
     public Game() {
-        car = Car.getInstance();
+        car = new Car();
         car.setX(150);
         car.setY(300);
-        track = Track.getInstance();
-
+        track = new Track();
         car.setSpeed(5);
         car.setRotationSpeed(0.04);
+
+
         setFocusable(true);
         addKeyListener(new TAdapter());
 
@@ -51,9 +54,10 @@ public class Game extends JPanel implements ActionListener {
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D g2d = (Graphics2D) graphics;
-
+        sensors = new Sensors(car);
         track.draw(g2d);
         car.draw(g2d);
+        sensors.createSensors(g2d);
     }
 
     public void checkCollision() {
@@ -64,6 +68,7 @@ public class Game extends JPanel implements ActionListener {
         int carY = (int) car.getY();
 
         try {
+
             for (int x = 0; x < carImage.getWidth(); x++) {
                 for (int y = 0; y < carImage.getHeight(); y++) {
                     int carPixel = carImage.getRGB(x, y);
@@ -71,11 +76,11 @@ public class Game extends JPanel implements ActionListener {
 
                     if (carPixel == Color.BLACK.getRGB() && trackPixel == Color.BLACK.getRGB()) {
                         resetCarPosition();
+
                     }
                 }
             }
-        }
-        catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             resetCarPosition();
         }
     }

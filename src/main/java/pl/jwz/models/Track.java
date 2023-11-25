@@ -16,22 +16,14 @@ public class Track {
     private final int width;
     private final int height;
     private BufferedImage trackImage;
-    private static Track instance;
     private final String trackImagePath = "assets/tracks/track1.png";
 
-    private Track() {
+    public Track() {
         this.x = 0;
         this.y = 0;
         this.width = 1500;
         this.height = 800;
         this.trackImage = loadTrackImage();
-    }
-
-    public static synchronized Track getInstance() {
-        if (instance == null) {
-            instance = new Track();
-        }
-        return instance;
     }
 
     public void draw(Graphics2D graphics) {

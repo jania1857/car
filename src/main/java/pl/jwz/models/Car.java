@@ -13,7 +13,6 @@ import java.util.Objects;
 @Setter
 public class Car {
 
-    private static Car instance;
     private double x;
     private double y;
     private double rotation;
@@ -23,7 +22,7 @@ public class Car {
     private int carWidth;
     private int carHeight;
 
-    private Car() {
+    public Car() {
         this.rotation = 0;
 
         ClassLoader classLoader = getClass().getClassLoader();
@@ -31,13 +30,6 @@ public class Car {
         image = imageIcon.getImage();
         this.carWidth = image.getWidth(null);
         this.carHeight = image.getHeight(null);
-    }
-
-    public static synchronized Car getInstance() {
-        if (instance == null) {
-            instance = new Car();
-        }
-        return instance;
     }
 
     public void setSpeed(int speed) {
@@ -57,8 +49,6 @@ public class Car {
         graphics.drawImage(image, (int) x, (int) y, null);
 
         graphics.setTransform(new AffineTransform());
-        Sensors sensors = new Sensors(this);
-        sensors.createSensors(graphics);
     }
 
     public void move() {

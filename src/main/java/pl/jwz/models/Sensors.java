@@ -15,14 +15,13 @@ public class Sensors {
     private int leftSensorLength;
     private int rightSensorLength;
     private boolean sensorsVisibility;
-    private final Track track = Track.getInstance();
-    private BufferedImage trackImage = track.getTrackImage();
     private final Car car;
     private final int carWidth;
     private final int carHeight;
     private final double carRotation;
     private final int middleOfCarX;
     private final int middleOfCarY;
+    private boolean leftCollision;
 
     public Sensors(Car car) {
         this.car = car;
@@ -55,9 +54,7 @@ public class Sensors {
         setVisible(g);
         g.drawLine(middleOfCarX - carWidth / 2, middleOfCarY - carHeight / 2, x2, y2);
 
-        if (checkSensorCollision(x2, y2)) {
-
-        }
+       // setLeftCollision(checkSensorCollision( x2, y2));
     }
 
     private void createRightSensor(Graphics2D g) {
@@ -81,9 +78,8 @@ public class Sensors {
         }
     }
 
-    private boolean checkSensorCollision(int x, int y) {
+    private boolean checkSensorCollision(BufferedImage trackImage, int x, int y) {
         int color = trackImage.getRGB(x, y);
         return color == Color.BLACK.getRGB();
     }
-
 }
