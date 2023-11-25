@@ -20,9 +20,11 @@ import java.util.Set;
 @Setter
 public class Game extends JPanel implements ActionListener {
 
+    private BufferedImage trackImage;
     private Sensors sensors;
     private final Car car;
     private final Track track;
+    private ModifierSensors modifierSensors;
     private final Set<Integer> keysPressed = new HashSet<>();
 
     private class TAdapter extends KeyAdapter {
@@ -43,7 +45,8 @@ public class Game extends JPanel implements ActionListener {
         car.setSpeed(5);
         car.setRotationSpeed(0.04);
 
-
+        trackImage = track.getTrackImage();
+        modifierSensors = new ModifierSensors();
         setFocusable(true);
         addKeyListener(new TAdapter());
 
@@ -54,15 +57,17 @@ public class Game extends JPanel implements ActionListener {
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D g2d = (Graphics2D) graphics;
-        sensors = new Sensors(car);
+
+        sensors = new Sensors(car, modifierSensors);
         track.draw(g2d);
         car.draw(g2d);
-        sensors.createSensors(g2d);
+        sensors.createSensors(g2d, trackImage);
+        modifierSensors.test(sensors.isLeftCollision());
+
     }
 
     public void checkCollision() {
         BufferedImage carImage = car.getImage();
-        BufferedImage trackImage = track.getTrackImage();
 
         int carX = (int) car.getX();
         int carY = (int) car.getY();
