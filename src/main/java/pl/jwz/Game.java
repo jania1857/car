@@ -50,7 +50,7 @@ public class Game extends JPanel implements ActionListener {
         setFocusable(true);
         addKeyListener(new TAdapter());
 
-        Timer timer = new Timer(1, this);
+        Timer timer = new Timer(100, this);
         timer.start();
     }
 
@@ -62,7 +62,7 @@ public class Game extends JPanel implements ActionListener {
         track.draw(g2d);
         car.draw(g2d);
         sensors.createSensors(g2d, trackImage);
-        modifierSensors.test(sensors);
+        modifierSensors.test(sensors, g2d, trackImage);
 
     }
 

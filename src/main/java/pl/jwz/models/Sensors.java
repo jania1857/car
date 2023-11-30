@@ -97,4 +97,5 @@ public class Sensors {
         int colorValue = trackImage.getRGB(x, y);
         return new Color(colorValue);
     }
+
 }

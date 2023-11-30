@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import pl.jwz.models.Sensors;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 @Getter
 @Setter
 public class ModifierSensors {
@@ -13,24 +16,19 @@ public class ModifierSensors {
     private int maxLength = 100;
     private int minLength = 0;
 
-    public ModifierSensors() {
-    }
-
-    public void test(Sensors sensors) {
+    public void test(Sensors sensors, Graphics2D graphics, BufferedImage image) {
         if (sensors.isLeftCollision()) {
-            do {
-                if (l1 > minLength)
-                    l1--;
-                else
-                    break;
-            } while (!sensors.isLeftCollision());
+            while (sensors.isLeftCollision()){
+                l1--;
+                sensors.setLeftSensorLength(l1);
+                sensors.createSensors(graphics, image);
+            }
         } else {
-            do {
-                if (l1 < maxLength)
-                    l1++;
-                else
-                    break;
-            } while (sensors.isLeftCollision());
+            while (!sensors.isLeftCollision()) {
+                l1++;
+                sensors.setLeftSensorLength(l1);
+                sensors.createSensors(graphics, image);
+            }
         }
 
 
