@@ -62,7 +62,7 @@ public class Game extends JPanel implements ActionListener {
         track.draw(g2d);
         car.draw(g2d);
         sensors.createSensors(g2d, trackImage);
-        modifierSensors.test(sensors.isLeftCollision());
+        modifierSensors.test(sensors);
 
     }
 
