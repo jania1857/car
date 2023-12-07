@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -21,15 +23,24 @@ public class Car {
     private Image image;
     private int carWidth;
     private int carHeight;
+    private List<Sensor> sensors;
+    private BufferedImage trackImage;
 
-    public Car() {
+
+    public Car(BufferedImage trackImage) {
         this.rotation = 0;
+        this.trackImage = trackImage;
 
         ClassLoader classLoader = getClass().getClassLoader();
-        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(classLoader.getResource("assets/cars/atrapa.png")));
+        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(classLoader.getResource("assets/cars/21x21.png")));
         image = imageIcon.getImage();
         this.carWidth = image.getWidth(null);
         this.carHeight = image.getHeight(null);
+
+        sensors = new ArrayList<>();
+        this.sensors.add(new Sensor(Math.toRadians(-45), false, carHeight));
+        this.sensors.add(new Sensor(Math.toRadians(-90), true, carHeight));
+        this.sensors.add(new Sensor(Math.toRadians(-135), false, carHeight));
     }
 
     public void setSpeed(int speed) {
@@ -49,6 +60,10 @@ public class Car {
         graphics.drawImage(image, (int) x, (int) y, null);
 
         graphics.setTransform(new AffineTransform());
+
+        for (Sensor sensor : sensors) {
+            sensor.draw(graphics, x + (double) carWidth / 2, y + (double) carHeight / 2, carHeight, carWidth);
+        }
     }
 
     public void move() {
@@ -58,8 +73,11 @@ public class Car {
 
         x += deltaX;
         y += deltaY;
-    }
 
+        for (Sensor sensor : sensors) {
+            sensor.update(x + (double) carWidth / 2, y + (double) carHeight / 2, trackImage, rotation);
+        }
+    }
     public void rotateLeft() {
         rotation -= rotationSpeed;
         if (rotation <= 0)

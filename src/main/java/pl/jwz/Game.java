@@ -3,7 +3,6 @@ package pl.jwz;
 import lombok.Getter;
 import lombok.Setter;
 import pl.jwz.models.Car;
-import pl.jwz.models.Sensors;
 import pl.jwz.models.Track;
 
 import javax.swing.*;
@@ -21,10 +20,8 @@ import java.util.Set;
 public class Game extends JPanel implements ActionListener {
 
     private BufferedImage trackImage;
-    private Sensors sensors;
     private final Car car;
     private final Track track;
-    private ModifierSensors modifierSensors;
     private final Set<Integer> keysPressed = new HashSet<>();
 
     private class TAdapter extends KeyAdapter {
@@ -38,19 +35,20 @@ public class Game extends JPanel implements ActionListener {
     }
 
     public Game() {
-        car = new Car();
+        track = new Track();
+        trackImage = track.getTrackImage();
+        car = new Car(trackImage);
         car.setX(150);
         car.setY(300);
-        track = new Track();
+
         car.setSpeed(5);
         car.setRotationSpeed(0.04);
 
-        trackImage = track.getTrackImage();
-        modifierSensors = new ModifierSensors();
+
         setFocusable(true);
         addKeyListener(new TAdapter());
 
-        Timer timer = new Timer(100, this);
+        Timer timer = new Timer(1, this);
         timer.start();
     }
 
@@ -58,11 +56,8 @@ public class Game extends JPanel implements ActionListener {
         super.paintComponent(graphics);
         Graphics2D g2d = (Graphics2D) graphics;
 
-        sensors = new Sensors(car, modifierSensors);
         track.draw(g2d);
         car.draw(g2d);
-        sensors.createSensors(g2d, trackImage);
-        modifierSensors.test(sensors, g2d, trackImage);
 
     }
 
@@ -91,6 +86,12 @@ public class Game extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+        handleKeyEvents();
+        checkCollision();
+        repaint();
+    }
+
+    private void handleKeyEvents() {
         if (keysPressed.contains(KeyEvent.VK_W)) {
             car.move();
             if (keysPressed.contains(KeyEvent.VK_A))
@@ -98,10 +99,7 @@ public class Game extends JPanel implements ActionListener {
             if (keysPressed.contains(KeyEvent.VK_D))
                 car.rotateRight();
         }
-        checkCollision();
-        repaint();
     }
-
     private void resetCarPosition() {
         car.setX(100);
         car.setY(300);
