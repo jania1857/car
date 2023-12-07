@@ -31,7 +31,7 @@ public class Sensors {
         this.carWidth = car.getCarWidth();
         this.carHeight = car.getCarHeight();
         this.carRotation = car.getRotation();
-        this.middleOfCarX = (int) (getCarX(car) + carWidth / 2);
+        this.middleOfCarX = (int) (car.getX() + carWidth / 2);
         this.middleOfCarY = (int) (car.getY() + carHeight / 2);
         this.centerSensorLength = 60;
         this.leftSensorLength = modifierSensors.getL1();
@@ -42,10 +42,6 @@ public class Sensors {
 //    public static synchronized Sensors getInstance(Car car, ModifierSensors modifierSensors) {
 //       return new Sensors(car, modifierSensors);
 //    }
-
-    private double getCarX(Car car) {
-        return car.getX();
-    }
 
     public void createSensors(Graphics2D graphics, BufferedImage trackImage) {
         createCenterSensor(graphics);
@@ -62,10 +58,10 @@ public class Sensors {
     private void createLeftSensor(Graphics2D g, BufferedImage trackImage) {
 
 
-        int x2 = (int) (middleOfCarX + leftSensorLength * Math.cos(180));
-        int y2 = (int) (middleOfCarY + leftSensorLength * Math.sin(180));
+        double x2 = (middleOfCarX + leftSensorLength * Math.cos(Math.PI));
+        double y2 = (middleOfCarY + leftSensorLength * Math.cos(Math.PI));
         setVisible(g);
-        g.drawLine(middleOfCarX - carWidth / 2, middleOfCarY - carHeight / 2, x2, y2);
+        g.drawLine(middleOfCarX - carWidth / 2, middleOfCarY - carHeight / 2, (int) x2, (int) y2);
         Color sensorColor = checkSensorCollision(trackImage, x2,y2);
         Color blackColor = Color.BLACK;
 
@@ -93,8 +89,13 @@ public class Sensors {
         }
     }
 
-    private Color checkSensorCollision(BufferedImage trackImage, int x, int y) {
-        int colorValue = trackImage.getRGB(x, y);
+    private Color checkSensorCollision(BufferedImage trackImage, double xp, double yp) {
+        double xo = middleOfCarX;
+        double yo = middleOfCarY;
+        double alfa = carRotation;
+        double x = xo + (xp - xo) * Math.cos(alfa) + (yp - yo) * Math.sin(alfa);
+        double y = yo - (yp - yo) * Math.cos(alfa) + (xp - xo) * Math.sin(alfa);
+        int colorValue = trackImage.getRGB((int) x, (int) y);
         return new Color(colorValue);
     }
 
