@@ -1,7 +1,12 @@
 package pl.jwz;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.swing.*;
 
+@Getter
+@Setter
 public class Window {
 
     private JFrame frame;
@@ -16,41 +21,6 @@ public class Window {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(windowVisibility);
         frame.add(game);
-    }
-
-    public String getWindowTitle() {
-        return windowTitle;
-    }
-
-    public void setWindowTitle(String windowTitle) {
-        this.windowTitle = windowTitle;
-    }
-
-    public int getWindowWidth() {
-        return windowWidth;
-    }
-
-    public void setWindowWidth(int windowWidth) {
-        this.windowWidth = windowWidth;
-    }
-
-    public int getWindowHeight() {
-        return windowHeight;
-    }
-
-    public void setWindowHeight(int windowHeight) {
-        this.windowHeight = windowHeight;
-    }
-
-    public boolean isWindowVisibility() {
-        return windowVisibility;
-    }
-
-    public void setWindowVisibility(boolean windowVisibility) {
-        this.windowVisibility = windowVisibility;
-    }
-
-    public JFrame getFrame() {
-        return frame;
+        game.requestFocus();
     }
 }

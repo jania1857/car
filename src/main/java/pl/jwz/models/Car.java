@@ -1,14 +1,20 @@
 package pl.jwz.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+@Getter
+@Setter
 public class Car {
 
-    private static Car instance;
     private double x;
     private double y;
     private double rotation;
@@ -17,24 +23,24 @@ public class Car {
     private Image image;
     private int carWidth;
     private int carHeight;
+    private List<Sensor> sensors;
+    private BufferedImage trackImage;
 
-    private Car() {
-        this.x = x;
-        this.y = y;
+
+    public Car(BufferedImage trackImage) {
         this.rotation = 0;
+        this.trackImage = trackImage;
 
         ClassLoader classLoader = getClass().getClassLoader();
-        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(classLoader.getResource("assets/cars/atrapa.png")));
+        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(classLoader.getResource("assets/cars/21x21.png")));
         image = imageIcon.getImage();
         this.carWidth = image.getWidth(null);
         this.carHeight = image.getHeight(null);
-    }
 
-    public static synchronized Car getInstance(){
-        if (instance == null){
-            instance = new Car();
-        }
-        return instance;
+        sensors = new ArrayList<>();
+        this.sensors.add(new Sensor(Math.toRadians(-45), false, carHeight));
+        this.sensors.add(new Sensor(Math.toRadians(-90), true, carHeight));
+        this.sensors.add(new Sensor(Math.toRadians(-135), false, carHeight));
     }
 
     public void setSpeed(int speed) {
@@ -54,40 +60,10 @@ public class Car {
         graphics.drawImage(image, (int) x, (int) y, null);
 
         graphics.setTransform(new AffineTransform());
-        Sensors sensors = new Sensors();
-        sensors.createSensors(graphics);
-    }
 
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public void setRotation(double rotation) {
-        this.rotation = rotation;
-    }
-
-    public double getRotation() {
-        return rotation;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public int getCarWidth() {
-        return carWidth;
-    }
-
-    public int getCarHeight() {
-        return carHeight;
+        for (Sensor sensor : sensors) {
+            sensor.draw(graphics, x + (double) carWidth / 2, y + (double) carHeight / 2, carHeight, carWidth);
+        }
     }
 
     public void move() {
@@ -97,8 +73,11 @@ public class Car {
 
         x += deltaX;
         y += deltaY;
-    }
 
+        for (Sensor sensor : sensors) {
+            sensor.update(x + (double) carWidth / 2, y + (double) carHeight / 2, trackImage, rotation);
+        }
+    }
     public void rotateLeft() {
         rotation -= rotationSpeed;
         if (rotation <= 0)
