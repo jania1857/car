@@ -3,6 +3,7 @@ package pl.jwz;
 import lombok.Getter;
 import lombok.Setter;
 import pl.jwz.models.Car;
+import pl.jwz.models.FuzzyLogic;
 import pl.jwz.models.Track;
 
 import javax.swing.*;
@@ -23,6 +24,7 @@ public class Game extends JPanel implements ActionListener {
     private final Car car;
     private final Track track;
     private final Set<Integer> keysPressed = new HashSet<>();
+    private FuzzyLogic fuzzyLogic;
 
     private class TAdapter extends KeyAdapter {
         public void keyPressed(KeyEvent e) {
@@ -37,19 +39,21 @@ public class Game extends JPanel implements ActionListener {
     public Game() {
         track = new Track();
         trackImage = track.getTrackImage();
-        car = new Car(trackImage);
+
+        car = new Car();
+        car.setTrackImage(trackImage);
         car.setX(150);
         car.setY(300);
 
-        car.setSpeed(5);
-        car.setRotationSpeed(0.04);
-
+        car.setSpeed(3d);
+        car.setRotationSpeed(0.2d);
 
         setFocusable(true);
         addKeyListener(new TAdapter());
 
         Timer timer = new Timer(1, this);
         timer.start();
+        fuzzyLogic = new FuzzyLogic();
     }
 
     public void paintComponent(Graphics graphics) {
@@ -86,20 +90,13 @@ public class Game extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        handleKeyEvents();
         checkCollision();
         repaint();
+
+        car.move();
+        fuzzyLogic.logic(car.getLeftSensorLength(), car.getCenterSenorLength(), car.getRightSensorLength(), 50, car);
     }
 
-    private void handleKeyEvents() {
-        if (keysPressed.contains(KeyEvent.VK_W)) {
-            car.move();
-            if (keysPressed.contains(KeyEvent.VK_A))
-                car.rotateLeft();
-            if (keysPressed.contains(KeyEvent.VK_D))
-                car.rotateRight();
-        }
-    }
     private void resetCarPosition() {
         car.setX(100);
         car.setY(300);

@@ -17,6 +17,9 @@ public class Sensor {
     private int carHeight;
     private double startX;
     private double startY;
+    private double maxLength = 100d;
+    private int sensorEndX;
+    private int sensorEndY;
 
     public Sensor(double angle, boolean center, int carHeight) {
         this.defaultAngle = angle;
@@ -29,16 +32,16 @@ public class Sensor {
     public void update(double carX, double carY, BufferedImage trackImage, double carRotation) {
         angle = defaultAngle + carRotation;
         if (center) {
-            startX = carX + (double) (carHeight /2) * Math.cos(angle);
-            startY = carY + (double) (carHeight /2) * Math.sin(angle);
+            startX = carX + (double) (carHeight / 2) * Math.cos(angle);
+            startY = carY + (double) (carHeight / 2) * Math.sin(angle);
         } else {
-            startX = carX + (((double) carHeight * Math.sqrt(2)) /2) * Math.cos(angle);
-            startY = carY + (((double) carHeight * Math.sqrt(2)) /2) * Math.sin(angle);
+            startX = carX + (((double) carHeight * Math.sqrt(2)) / 2) * Math.cos(angle);
+            startY = carY + (((double) carHeight * Math.sqrt(2)) / 2) * Math.sin(angle);
         }
         double d = 0;
         int stepSize = 1;
 
-        while (d >= 0) {
+        while (d <= maxLength) {
             int x = (int) (startX + d * Math.cos(angle));
             int y = (int) (startY + d * Math.sin(angle));
 
@@ -60,11 +63,11 @@ public class Sensor {
     public void draw(Graphics2D g2d, double carX, double carY, int carHeight, int carWidth) {
         if (visible) {
 
-            int sensorEndX = (int) (startX + distance * Math.cos(angle));
-            int sensorEnY = (int) (startY + distance * Math.sin(angle));
+            sensorEndX = (int) (startX + distance * Math.cos(angle));
+            sensorEndY = (int) (startY + distance * Math.sin(angle));
 
             g2d.setColor(Color.RED);
-            g2d.drawLine((int) startX, (int) startY, sensorEndX, sensorEnY);
+            g2d.drawLine((int) startX, (int) startY, sensorEndX, sensorEndY);
         }
     }
 }

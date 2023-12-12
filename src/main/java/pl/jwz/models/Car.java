@@ -18,18 +18,19 @@ public class Car {
     private double x;
     private double y;
     private double rotation;
-    private int speed;
+    private double speed;
     private double rotationSpeed;
     private Image image;
     private int carWidth;
     private int carHeight;
     private List<Sensor> sensors;
     private BufferedImage trackImage;
+    private double leftSensorLength;
+    private double centerSenorLength;
+    private double rightSensorLength;
 
-
-    public Car(BufferedImage trackImage) {
+    public Car() {
         this.rotation = 0;
-        this.trackImage = trackImage;
 
         ClassLoader classLoader = getClass().getClassLoader();
         ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(classLoader.getResource("assets/cars/21x21.png")));
@@ -41,14 +42,6 @@ public class Car {
         this.sensors.add(new Sensor(Math.toRadians(-45), false, carHeight));
         this.sensors.add(new Sensor(Math.toRadians(-90), true, carHeight));
         this.sensors.add(new Sensor(Math.toRadians(-135), false, carHeight));
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
-    public void setRotationSpeed(double rotationSpeed) {
-        this.rotationSpeed = rotationSpeed;
     }
 
     public void draw(Graphics2D graphics) {
@@ -64,6 +57,18 @@ public class Car {
         for (Sensor sensor : sensors) {
             sensor.draw(graphics, x + (double) carWidth / 2, y + (double) carHeight / 2, carHeight, carWidth);
         }
+
+        for (int i = 0; i < sensors.size(); i++) {
+            Sensor sensor = sensors.get(i);
+
+            if (i == 0) {
+                rightSensorLength = sensor.getDistance();
+            } else if (i == 1) {
+                centerSenorLength = sensor.getDistance();
+            } else if (i == 2) {
+                leftSensorLength = sensor.getDistance();
+            }
+        }
     }
 
     public void move() {
@@ -78,6 +83,7 @@ public class Car {
             sensor.update(x + (double) carWidth / 2, y + (double) carHeight / 2, trackImage, rotation);
         }
     }
+
     public void rotateLeft() {
         rotation -= rotationSpeed;
         if (rotation <= 0)
@@ -102,4 +108,6 @@ public class Car {
 
         return bufferedImage;
     }
+
+
 }
