@@ -61,13 +61,17 @@ public class Sensor {
     }
 
     public void draw(Graphics2D g2d, double carX, double carY, int carHeight, int carWidth) {
+
         if (visible) {
-
-            sensorEndX = (int) (startX + distance * Math.cos(angle));
-            sensorEndY = (int) (startY + distance * Math.sin(angle));
-
             g2d.setColor(Color.RED);
-            g2d.drawLine((int) startX, (int) startY, sensorEndX, sensorEndY);
+        } else {
+            g2d.setColor(Color.WHITE);
         }
+
+        sensorEndX = (int) (startX + distance * Math.cos(angle));
+        sensorEndY = (int) (startY + distance * Math.sin(angle));
+
+        g2d.drawLine((int) startX, (int) startY, sensorEndX, sensorEndY);
+
     }
 }

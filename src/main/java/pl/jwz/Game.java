@@ -43,10 +43,10 @@ public class Game extends JPanel implements ActionListener {
         car = new Car();
         car.setTrackImage(trackImage);
         car.setX(150);
-        car.setY(300);
+        car.setY(350);
 
-        car.setSpeed(3d);
-        car.setRotationSpeed(0.2d);
+        car.setSpeed(7d);
+        car.setRotationSpeed(0.09d);
 
         setFocusable(true);
         addKeyListener(new TAdapter());
@@ -99,7 +99,7 @@ public class Game extends JPanel implements ActionListener {
 
     private void resetCarPosition() {
         car.setX(100);
-        car.setY(300);
+        car.setY(380);
         car.setRotation(0);
     }
 }
