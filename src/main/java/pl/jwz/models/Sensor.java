@@ -17,7 +17,7 @@ public class Sensor {
     private int carHeight;
     private double startX;
     private double startY;
-    private double maxLength = 100d;
+    private double maxLength = 50d;
     private int sensorEndX;
     private int sensorEndY;
 

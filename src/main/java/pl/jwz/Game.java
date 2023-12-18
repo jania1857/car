@@ -45,7 +45,7 @@ public class Game extends JPanel implements ActionListener {
         car.setX(150);
         car.setY(350);
 
-        car.setSpeed(7d);
+        car.setSpeed(3d);
         car.setRotationSpeed(0.09d);
 
         setFocusable(true);
@@ -53,7 +53,7 @@ public class Game extends JPanel implements ActionListener {
 
         Timer timer = new Timer(1, this);
         timer.start();
-        fuzzyLogic = new FuzzyLogic();
+        fuzzyLogic = new FuzzyLogic(50);
     }
 
     public void paintComponent(Graphics graphics) {
@@ -70,7 +70,6 @@ public class Game extends JPanel implements ActionListener {
 
         int carX = (int) car.getX();
         int carY = (int) car.getY();
-
         try {
 
             for (int x = 0; x < carImage.getWidth(); x++) {
@@ -84,6 +83,7 @@ public class Game extends JPanel implements ActionListener {
                     }
                 }
             }
+
         } catch (ArrayIndexOutOfBoundsException e) {
             resetCarPosition();
         }
@@ -92,9 +92,8 @@ public class Game extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         checkCollision();
         repaint();
-
         car.move();
-        fuzzyLogic.logic(car.getLeftSensorLength(), car.getCenterSenorLength(), car.getRightSensorLength(), 50, car);
+        fuzzyLogic.ChangeCarRotation((int) car.getLeftSensorLength(), (int) car.getCenterSenorLength(), (int) car.getRightSensorLength(), car);
     }
 
     private void resetCarPosition() {
