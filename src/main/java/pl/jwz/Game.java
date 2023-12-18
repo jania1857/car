@@ -10,8 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,16 +24,6 @@ public class Game extends JPanel implements ActionListener {
     private final Set<Integer> keysPressed = new HashSet<>();
     private FuzzyLogic fuzzyLogic;
 
-    private class TAdapter extends KeyAdapter {
-        public void keyPressed(KeyEvent e) {
-            keysPressed.add(e.getKeyCode());
-        }
-
-        public void keyReleased(KeyEvent e) {
-            keysPressed.remove(e.getKeyCode());
-        }
-    }
-
     public Game() {
         track = new Track();
         trackImage = track.getTrackImage();
@@ -46,10 +34,9 @@ public class Game extends JPanel implements ActionListener {
         car.setY(350);
 
         car.setSpeed(3d);
-        car.setRotationSpeed(0.09d);
+        car.setRotationSpeed(0.01d);
 
         setFocusable(true);
-        addKeyListener(new TAdapter());
 
         Timer timer = new Timer(1, this);
         timer.start();
@@ -93,7 +80,7 @@ public class Game extends JPanel implements ActionListener {
         checkCollision();
         repaint();
         car.move();
-        fuzzyLogic.ChangeCarRotation((int) car.getLeftSensorLength(), (int) car.getCenterSenorLength(), (int) car.getRightSensorLength(), car);
+        fuzzyLogic.fuzzyLogicSystem((int) car.getLeftSensorLength(), (int) car.getCenterSenorLength(), (int) car.getRightSensorLength(), car);
     }
 
     private void resetCarPosition() {
