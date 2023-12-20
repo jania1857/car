@@ -108,6 +108,4 @@ public class Car {
 
         return bufferedImage;
     }
-
-
 }

@@ -23,13 +23,13 @@ public class FuzzyLogic {
     private static final double[][] conclusion = new double[8][91];
     private static final double[][] aggregation = new double[2][91];
 
-
+    //
     public FuzzyLogic(int maximum) {
         this.max = (maximum + 2);
         int border = (int) (double) ((max - (max / 3)) / 3);
-        this.a = border;
-        this.b = border * 2;
-        this.c = border * 3;
+        this.a = 16;
+        this.b = 32;
+        this.c = 51;
         leftDistance = new double[3][max];
         rightDistance = new double[3][max];
         centerDistance = new double[3][max];
@@ -45,36 +45,43 @@ public class FuzzyLogic {
 
             if (i <= 5)
                 turn[0][i] = 1;
+
             if (i >= 5 & i <= 15)
                 turn[0][i] = (15 - (double) i) / (15 - 5);
 
             if (i >= 5 & i <= 15)
                 turn[1][i] = ((double) i - 5) / (15 - 5);
+
             if (i >= 15 & i <= 30)
                 turn[1][i] = (30 - (double) i) / (30 - 15);
 
             if (i >= 15 & i <= 30)
                 turn[2][i] = ((double) i - 15) / (30 - 15);
+
             if (i >= 30 & i <= 45)
                 turn[2][i] = (45 - (double) i) / (45 - 30);
 
             if (i >= 30 & i <= 45)
                 turn[3][i] = ((double) i - 30) / (45 - 30);
+
             if (i >= 45 & i <= 60)
                 turn[3][i] = (60 - (double) i) / (60 - 45);
 
             if (i >= 45 & i <= 60)
                 turn[4][i] = ((double) i - 45) / (60 - 45);
+
             if (i >= 60 & i <= 75)
                 turn[4][i] = (75 - (double) i) / (75 - 60);
 
             if (i >= 60 & i <= 75)
                 turn[5][i] = ((double) i - 60) / (75 - 60);
+
             if (i >= 75 & i <= 85)
                 turn[5][i] = (85 - (double) i) / (85 - 75);
 
             if (i >= 75 & i <= 85)
                 turn[6][i] = ((double) i - 75) / (85 - 75);
+
             if (i >= 85 & i <= 91)
                 turn[6][i] = 1;
         }
@@ -141,7 +148,6 @@ public class FuzzyLogic {
     }
 
     public void blur(int left, int center, int right) {
-
         closeLeft = leftDistance[0][left];
         mediumLeft = leftDistance[1][left];
         farLeft = leftDistance[2][left];
@@ -230,7 +236,7 @@ public class FuzzyLogic {
         }
     }
 
-    private double sharpening() {
+    public int sharpening() {
         double g = 0;
         double d = 0;
         for (int j = 0; j < turn[0].length; j++) {
@@ -239,18 +245,16 @@ public class FuzzyLogic {
         }
 
         double y = g / d;
-        return y - 45;
+        y = y - 45;
+
+        return (int) Math.floor(y);
     }
 
-    public void fuzzyLogicSystem(int left, int center, int right, Car car) {
+    public void fuzzyLogicSystem(int left, int center, int right) {
         blur(left, center, right);
         createRules();
         conclusion();
         aggregation();
-
-        double oldRotation = car.getRotation();
-        double newRotation = oldRotation + sharpening();
-        car.setRotation(newRotation);
     }
 
     private double findMaxValue(double... numbers) {
