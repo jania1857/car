@@ -33,7 +33,7 @@ public class Game extends JPanel implements ActionListener {
         car.setX(150);
         car.setY(350);
 
-        car.setSpeed(10d);
+        car.setSpeed(5d);
         car.setRotationSpeed(0.01d);
 
         setFocusable(true);
@@ -80,19 +80,8 @@ public class Game extends JPanel implements ActionListener {
         car.move();
         fuzzyLogic.fuzzyLogicSystem((int) car.getLeftSensorLength(), (int) car.getCenterSenorLength(), (int) car.getRightSensorLength());
 
-        int turn = fuzzyLogic.sharpening();
-
-        if (turn > 0) {
-            for (int i = 0; i <= turn; i++) {
-                car.rotateRight();
-            }
-        }
-
-        if (turn < 0) {
-            for (int i = 0; i <= Math.abs(turn); i++) {
-                car.rotateLeft();
-            }
-        }
+        double radians = Math.toRadians(fuzzyLogic.sharpening());
+        car.setRotation(car.getRotation() + radians);
     }
 
     private void resetCarPosition() {

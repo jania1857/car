@@ -23,7 +23,6 @@ public class FuzzyLogic {
     private static final double[][] conclusion = new double[8][91];
     private static final double[][] aggregation = new double[2][91];
 
-    //
     public FuzzyLogic(int maximum) {
         this.max = (maximum + 2);
         int border = (int) (double) ((max - (max / 3)) / 3);
@@ -236,7 +235,7 @@ public class FuzzyLogic {
         }
     }
 
-    public int sharpening() {
+    public double sharpening() {
         double g = 0;
         double d = 0;
         for (int j = 0; j < turn[0].length; j++) {
@@ -247,7 +246,7 @@ public class FuzzyLogic {
         double y = g / d;
         y = y - 45;
 
-        return (int) Math.floor(y);
+        return y;
     }
 
     public void fuzzyLogicSystem(int left, int center, int right) {
